@@ -83,8 +83,9 @@ def print_caminho(x,v):
 def busca_largura(s):
     x = []
     F = [Estado(s,None,None,0)]
-    
-    while True:
+    found = False
+
+    while not found:
         if not F:
             return False
 
@@ -92,19 +93,22 @@ def busca_largura(s):
 
         if v.estado == '12345678_':
             print_caminho(x,v)
-            break
-
-        x.append(v)
-        fronteira = expande(v)
-
-        for estado in fronteira:
-            F.append(estado)
+            found = True
+        else:
+            if not estado_visistado(v,x):
+                x.append(v)
+                for vizinho in expande(v):
+                    if not estado_visistado(vizinho,x):
+                        if not estado_visistado(vizinho,F):
+                            F.append(vizinho)
+                            #imprime_estado(vizinho)
 
 def busca_profundidade(s):
     x = []
     F = [Estado(s,None,None,0)]
-    
-    while True:
+    found = False
+
+    while not found:
         if not F:
             return False
 
@@ -112,24 +116,43 @@ def busca_profundidade(s):
 
         if v.estado == '12345678_':
             print_caminho(x,v)
-            break
-
-        x.append(v)
-        fronteira = expande(v)
-
-        for estado in fronteira:
-            F.append(estado)
-        
-
-
-
+            found = True
+        else:
+            if not estado_visistado(v,x):
+                x.append(v)
+                for vizinho in expande(v):
+                    if not estado_visistado(vizinho,x):
+                        if not estado_visistado(vizinho,F):
+                            F.append(vizinho)
+                            #imprime_estado(vizinho)
 
 
-estado='123456_78'
-print(estado)
-avalia_sucessor(estado)
-avalia_expande(estado,0)
+def estado_visistado(estado, expandidos):
+    for expandido in expandidos:
+        if expandido.estado == estado.estado:
+            return True
+    return False
+
+
+def imprime_estado(estado): 
+    print('-------------------')
+    print("e: " + estado.estado)
+    if estado.acao == None:
+        print("a: None")
+    else:
+        print("a: " + estado.acao)
+    print("c: " + str(estado.custo))
+    if estado.pai:
+        print("p: " + estado.pai.estado)
+    else:
+        print("p: None")
+    print('-------------------')
+
+#estado='123456_78'
+#print(estado)
+#avalia_sucessor(estado)
+#avalia_expande(estado,0)
 
 #busca_largura('2_3541687')
 busca_largura('123_56478')
-busca_profundidade('1234567_8')
+busca_profundidade('123_56478')
