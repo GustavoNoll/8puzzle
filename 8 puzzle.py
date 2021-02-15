@@ -76,9 +76,31 @@ def avalia_sucessor(estado):
         print(f'({suc[0]},{suc[1]})', end=' ')
     print()
 
-def print_caminho(x,v):
-    print('Achei')
-             
+def print_caminho_bfs(x,v):
+    print('----------------- Busca em Largura -------------------')
+    print('Estado inicial: ' + x[0].estado)
+    print('Objetivo: ' + v.estado)
+    print('------------------------------------------------------')
+    for x in x:
+        if x.acao != None:
+            print(x.acao, end=" ")
+            print(x.estado)
+
+    print('Chegou no objetivo: ' + v.acao + ' ' + v.estado)
+    print('------------------------------------------------------')   
+
+def print_caminho_dfs(x,v):
+    print('--------------- Busca em Profundidade ----------------')
+    print('Estado inicial: ' + x[0].estado)
+    print('Objetivo: ' + v.estado)
+    print('------------------------------------------------------')
+    for x in x:
+        if x.acao != None:
+            print(x.acao, end=" ")
+            print(x.estado)
+            
+    print('Chegou no objetivo: ' + v.acao + ' ' + v.estado)
+    print('------------------------------------------------------')         
 
 def busca_largura(s):
     x = []
@@ -92,7 +114,7 @@ def busca_largura(s):
         v = F.pop(0)
 
         if v.estado == '12345678_':
-            print_caminho(x,v)
+            print_caminho_bfs(x,v)
             found = True
         else:
             if not estado_visistado(v,x):
@@ -115,7 +137,7 @@ def busca_profundidade(s):
         v = F.pop()
 
         if v.estado == '12345678_':
-            print_caminho(x,v)
+            print_caminho_dfs(x,v)
             found = True
         else:
             if not estado_visistado(v,x):
@@ -138,9 +160,9 @@ def imprime_estado(estado):
     print('-------------------')
     print("e: " + estado.estado)
     if estado.acao == None:
-        print("a: None")
+        print("None")
     else:
-        print("a: " + estado.acao)
+        print(estado.acao)
     print("c: " + str(estado.custo))
     if estado.pai:
         print("p: " + estado.pai.estado)
