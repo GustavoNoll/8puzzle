@@ -86,27 +86,17 @@ def busca_largura(s):
     x = []
     F = [Estado(s,None,None,0)]
     found = False
+    iter = 1
 
     while not found:
         if not F:
             return False
-
-        print('explorados x:')
-        for e in x:
-            imprime_estado(e)
-
-        print('fronteira F:')
-        for e in F:
-            imprime_estado(e)
-
-        print('-----------------------------------------')
-
-        input()
 
         v = F.pop(0)
 
         if v.estado == '12345678_':
             print_caminho(v)
+            print("iterações: ", iter)
             found = True
         else:
             if not estado_visistado(v,x):
@@ -115,32 +105,23 @@ def busca_largura(s):
                     if not estado_visistado(vizinho,x):
                         if not estado_visistado(vizinho,F):
                             F.append(vizinho)
+                            iter += 1
 
 def busca_profundidade(s):
     x = []
     F = [Estado(s,None,None,0)]
     found = False
+    iter = 1
 
     while not found:
         if not F:
-            return False
-
-        print('explorados x:')
-        for e in x:
-            imprime_estado(e)
-
-        print('fronteira F:')
-        for e in F:
-            imprime_estado(e)
-
-        print('-----------------------------------------')
-
-        input()
+            return False     
 
         v = F.pop()
 
         if v.estado == '12345678_':
             print_caminho(v)
+            print("iterações: ", iter)
             found = True
         else:
             if not estado_visistado(v,x):
@@ -149,6 +130,8 @@ def busca_profundidade(s):
                     if not estado_visistado(vizinho,x):
                         if not estado_visistado(vizinho,F):
                             F.append(vizinho)
+                            iter += 1
+
 
 
 def estado_visistado(estado, expandidos):
@@ -179,4 +162,4 @@ def imprime_estado(estado):
 
 #busca_largura('2_3541687')
 busca_largura('123_56478')
-#busca_profundidade('123_56478')
+busca_profundidade('2_3541687')
