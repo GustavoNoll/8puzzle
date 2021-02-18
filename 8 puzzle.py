@@ -76,31 +76,11 @@ def avalia_sucessor(estado):
         print(f'({suc[0]},{suc[1]})', end=' ')
     print()
 
-def print_caminho_bfs(x,v):
-    print('----------------- Busca em Largura -------------------')
-    print('Estado inicial: ' + x[0].estado)
-    print('Objetivo: ' + v.estado)
-    print('------------------------------------------------------')
-    for x in x:
-        if x.acao != None:
-            print(x.acao, end=" ")
-            print(x.estado)
-
-    print('Chegou no objetivo: ' + v.acao + ' ' + v.estado)
-    print('------------------------------------------------------')   
-
-def print_caminho_dfs(x,v):
-    print('--------------- Busca em Profundidade ----------------')
-    print('Estado inicial: ' + x[0].estado)
-    print('Objetivo: ' + v.estado)
-    print('------------------------------------------------------')
-    for x in x:
-        if x.acao != None:
-            print(x.acao, end=" ")
-            print(x.estado)
-            
-    print('Chegou no objetivo: ' + v.acao + ' ' + v.estado)
-    print('------------------------------------------------------')         
+def print_caminho(v: Estado):
+    if v.custo > 0:
+        print_caminho(v.pai)
+    if not v.acao == None:
+        print(v.acao, end=' ')
 
 def busca_largura(s):
     x = []
@@ -111,10 +91,22 @@ def busca_largura(s):
         if not F:
             return False
 
+        print('explorados x:')
+        for e in x:
+            imprime_estado(e)
+
+        print('fronteira F:')
+        for e in F:
+            imprime_estado(e)
+
+        print('-----------------------------------------')
+
+        input()
+
         v = F.pop(0)
 
         if v.estado == '12345678_':
-            print_caminho_bfs(x,v)
+            print_caminho(v)
             found = True
         else:
             if not estado_visistado(v,x):
@@ -123,7 +115,6 @@ def busca_largura(s):
                     if not estado_visistado(vizinho,x):
                         if not estado_visistado(vizinho,F):
                             F.append(vizinho)
-                            #imprime_estado(vizinho)
 
 def busca_profundidade(s):
     x = []
@@ -134,10 +125,22 @@ def busca_profundidade(s):
         if not F:
             return False
 
+        print('explorados x:')
+        for e in x:
+            imprime_estado(e)
+
+        print('fronteira F:')
+        for e in F:
+            imprime_estado(e)
+
+        print('-----------------------------------------')
+
+        input()
+
         v = F.pop()
 
         if v.estado == '12345678_':
-            print_caminho_dfs(x,v)
+            print_caminho(v)
             found = True
         else:
             if not estado_visistado(v,x):
@@ -146,7 +149,6 @@ def busca_profundidade(s):
                     if not estado_visistado(vizinho,x):
                         if not estado_visistado(vizinho,F):
                             F.append(vizinho)
-                            #imprime_estado(vizinho)
 
 
 def estado_visistado(estado, expandidos):
@@ -177,4 +179,4 @@ def imprime_estado(estado):
 
 #busca_largura('2_3541687')
 busca_largura('123_56478')
-busca_profundidade('123_56478')
+#busca_profundidade('123_56478')
