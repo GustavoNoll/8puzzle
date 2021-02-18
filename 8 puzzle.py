@@ -1,4 +1,4 @@
-from pprint import pprint
+from pprint import pprint\
 
 class Estado:
 
@@ -133,6 +133,28 @@ def busca_profundidade(s):
                             iter += 1
 
 
+def h2(v): #manhatan
+    distance = 0
+    goal = ['1','2','3','4','5','6','7','8','_']
+    estado_lista=[[v[0],v[1],v[2]],[v[3],v[4],v[5]],[v[6],v[7],v[8]]]
+    for i in range(3):
+        for j in range(3):
+            if estado_lista[i][j]!= '_':
+                a=int(goal.index(estado_lista[i][j])/3)
+                b=int(goal.index(estado_lista[i][j])%3)
+                distance+=abs(i-a) + abs(j-b)
+    #print("{}".format(distance))
+    return distance
+
+
+def h1(v): #hamming
+    distance = 0
+    goal = ['1','2','3','4','5','6','7','8','_']
+    estado_lista=string_to_list(v)
+    for i in range(9):
+        if goal[i] != estado_lista[i] and estado_lista[i]!= '_': distance += 1
+    #print("{}".format(distance))
+    return distance
 
 def estado_visistado(estado, expandidos):
     for expandido in expandidos:
@@ -161,5 +183,7 @@ def imprime_estado(estado):
 #avalia_expande(estado,0)
 
 #busca_largura('2_3541687')
-busca_largura('123_56478')
-busca_profundidade('2_3541687')
+#busca_largura('123_56478')
+#busca_profundidade('2_3541687')
+h2('5_4732816')
+h1('5_4732816')
