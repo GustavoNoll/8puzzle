@@ -1,5 +1,6 @@
 from math import floor
-
+from collections import deque 
+import time
 
 class Estado:
 
@@ -158,8 +159,10 @@ def print_caminho(v: Estado):
 
 
 def busca_largura(s):
-    x = []
-    F = [Estado(s, None, None, 0)]
+    tempo = time.time()
+    x = deque([])
+    visitados = deque([])
+    F = deque([Estado(s, None, None, 0)])
     found = False
     iter = 1
 
@@ -167,25 +170,29 @@ def busca_largura(s):
         if not F:
             return False
 
-        v = F.pop(0)
+        v = F.popleft()        
 
         if v.estado == '12345678_':
             print_caminho(v)
             print("| custo: ", v.custo)
             found = True
+            print("--- %s seconds ---" % (time.time() - tempo))
         else:
-            if not estado_visistado(v, x):
+            #if not estado_visistado(v, x):
                 x.append(v)
+                visitados.append(v.estado)
                 for vizinho in expande(v):
-                    if not estado_visistado(vizinho, x):
-                        if not estado_visistado(vizinho, F):
-                            F.append(vizinho)
-                            iter += 1
+                    if vizinho.estado not in visitados:
+                        F.append(vizinho)
+                        visitados.append(vizinho.estado)
+                        iter += 1
 
 
 def busca_profundidade(s):
+    tempo = time.time()
     x = []
     F = [Estado(s, None, None, 0)]
+    visitados = deque([])
     found = False
     iter = 1
 
@@ -199,19 +206,23 @@ def busca_profundidade(s):
             print_caminho(v)
             print("| custo: ", v.custo)
             found = True
+            print("--- %s seconds ---" % (time.time() - tempo))
         else:
-            if not estado_visistado(v, x):
+            #if not estado_visistado(v, x):
                 x.append(v)
+                visitados.append(v.estado)
                 for vizinho in expande(v):
-                    if not estado_visistado(vizinho, x):
-                        if not estado_visistado(vizinho, F):
-                            F.append(vizinho)
-                            iter += 1
+                    if vizinho.estado not in visitados:
+                        F.append(vizinho)
+                        visitados.append(vizinho.estado)
+                        iter += 1
 
 
 def busca_astar_h1(s):
+    tempo = time.time()
     x = []
     F = FilaPrioridade()
+    visitados = deque([])
 
     F.insere(Estado(s, None, None, 0, h1(s)))
 
@@ -228,15 +239,17 @@ def busca_astar_h1(s):
             print_caminho(v)
             print("| custo: ", v.custo)
             found = True
+            print("--- %s seconds ---" % (time.time() - tempo))
         else:
-            if not estado_visistado(v, x):
+            #if not estado_visistado(v, x):
                 x.append(v)
+                visitados.append(v.estado)
                 for vizinho in expande(v):
-                    if not estado_visistado(vizinho, x):
-                        if not estado_visistado(vizinho, F.fila):
-                            vizinho.f = h1(vizinho.estado) + vizinho.custo
-                            F.insere(vizinho)
-                            iter += 1
+                    if vizinho.estado not in visitados:
+                        vizinho.f = h1(vizinho.estado) + vizinho.custo
+                        visitados.append(vizinho.estado)
+                        F.insere(vizinho)
+                        iter += 1
 
 
 def h2(v):  # manhatan
@@ -265,6 +278,7 @@ def h1(v):  # hamming
 
 
 def estado_visistado(estado, expandidos):
+    #return(all(e.estado == estado.estado for e in expandidos))
     for expandido in expandidos:
         if expandido.estado == estado.estado:
             return True
@@ -290,8 +304,11 @@ def imprime_estado(estado):
 # avalia_sucessor(estado)
 # avalia_expande(estado,0)
 
-# busca_largura('2_3541687')
-busca_astar_h1('2_3541687')
-# busca_profundidade('123_56478')
+#busca_largura('23_541687')
+busca_astar_h1('23_541687')
+#busca_profundidade('123456_78')
 # h2('5_4732816')
 # h1('5_4732816')
+
+#123_56478
+#2_3541687
