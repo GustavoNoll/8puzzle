@@ -1,6 +1,7 @@
 from math import floor
 from collections import deque 
 import time
+import sys
 
 class Estado:
 
@@ -152,16 +153,18 @@ def avalia_sucessor(estado):
 
 
 def print_caminho(v: Estado):
-    if v.custo > 0:
-        print_caminho(v.pai)
-    if not v.acao == None:
-        print(v.acao, end=' ')
+    caminho = deque()
+    while v.custo != 0:
+        caminho.append(v.acao)
+        v = v.pai
+    while caminho:
+        print(caminho.pop(), end=' ')
 
 
 def busca_largura(s):
     tempo = time.time()
     x = deque([])
-    visitados = deque([])
+    visitados = set()
     F = deque([Estado(s, None, None, 0)])
     found = False
     iter = 1
@@ -178,21 +181,20 @@ def busca_largura(s):
             found = True
             print("--- %s seconds ---" % (time.time() - tempo))
         else:
-            #if not estado_visistado(v, x):
-                x.append(v)
-                visitados.append(v.estado)
-                for vizinho in expande(v):
-                    if vizinho.estado not in visitados:
-                        F.append(vizinho)
-                        visitados.append(vizinho.estado)
-                        iter += 1
+            x.append(v)
+            visitados.add(v.estado)
+            for vizinho in expande(v):
+                if vizinho.estado not in visitados:
+                    F.append(vizinho)
+                    visitados.add(vizinho.estado)
+                    iter += 1
 
 
 def busca_profundidade(s):
     tempo = time.time()
     x = []
     F = [Estado(s, None, None, 0)]
-    visitados = deque([])
+    visitados = set()
     found = False
     iter = 1
 
@@ -208,21 +210,20 @@ def busca_profundidade(s):
             found = True
             print("--- %s seconds ---" % (time.time() - tempo))
         else:
-            #if not estado_visistado(v, x):
-                x.append(v)
-                visitados.append(v.estado)
-                for vizinho in expande(v):
-                    if vizinho.estado not in visitados:
-                        F.append(vizinho)
-                        visitados.append(vizinho.estado)
-                        iter += 1
+            x.append(v)
+            visitados.add(v.estado)
+            for vizinho in expande(v):
+                if vizinho.estado not in visitados:
+                    F.append(vizinho)
+                    visitados.add(vizinho.estado)
+                    iter += 1
 
 
 def busca_astar_h1(s):
     tempo = time.time()
     x = []
     F = FilaPrioridade()
-    visitados = deque([])
+    visitados = set()
 
     F.insere(Estado(s, None, None, 0, h1(s)))
 
@@ -241,15 +242,14 @@ def busca_astar_h1(s):
             found = True
             print("--- %s seconds ---" % (time.time() - tempo))
         else:
-            #if not estado_visistado(v, x):
-                x.append(v)
-                visitados.append(v.estado)
-                for vizinho in expande(v):
-                    if vizinho.estado not in visitados:
-                        vizinho.f = h1(vizinho.estado) + vizinho.custo
-                        visitados.append(vizinho.estado)
-                        F.insere(vizinho)
-                        iter += 1
+            x.append(v)
+            visitados.add(v.estado)
+            for vizinho in expande(v):
+                if vizinho.estado not in visitados:
+                    vizinho.f = h1(vizinho.estado) + vizinho.custo
+                    visitados.add(vizinho.estado)
+                    F.insere(vizinho)
+                    iter += 1
 
 
 def h2(v):  # manhatan
@@ -304,9 +304,11 @@ def imprime_estado(estado):
 # avalia_sucessor(estado)
 # avalia_expande(estado,0)
 
-#busca_largura('23_541687')
-busca_astar_h1('23_541687')
-#busca_profundidade('123456_78')
+sys.setrecursionlimit(1000)
+
+##busca_largura('123_56478')
+#busca_astar_h1('23_541687')
+busca_profundidade('23_541687')
 # h2('5_4732816')
 # h1('5_4732816')
 
