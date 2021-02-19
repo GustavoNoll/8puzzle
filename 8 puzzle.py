@@ -182,8 +182,8 @@ def busca_largura(s):
         vertice = F.popleft()
         
         if vertice.estado == '12345678_':
-            #print_caminho(vertice)
-            print(f'| custo: {vertice.custo} | tempo: {time.time() - tempo} s')
+            print_caminho(vertice)
+            #print(f'| custo: {vertice.custo} | tempo: {time.time() - tempo} s')
             found = True
         else:
             x.append(vertice)
@@ -209,8 +209,8 @@ def busca_profundidade(s):
         vertice = F.pop()
         
         if vertice.estado == '12345678_':
-            #print_caminho(vertice)
-            print(f'| custo: {vertice.custo} | tempo: {time.time() - tempo} s')
+            print_caminho(vertice)
+            #print(f'| custo: {vertice.custo} | tempo: {time.time() - tempo} s')
             found = True
         else:
             x.append(vertice)
@@ -238,8 +238,8 @@ def busca_astar_h1(s):
         vertice = F.pop()
 
         if vertice.estado == '12345678_':
-            #print_caminho(vertice)
-            print(f'| custo: {vertice.custo} | tempo: {time.time() - tempo} s')
+            print_caminho(vertice)
+            #print(f'| custo: {vertice.custo} | tempo: {time.time() - tempo} s')
             found = True
         else:
             x.append(vertice)
@@ -268,8 +268,8 @@ def busca_astar_h2(s):
         vertice = F.pop()
 
         if vertice.estado == '12345678_':
-            #print_caminho(vertice)
-            print(f'| custo: {vertice.custo} | tempo: {time.time() - tempo} s')
+            print_caminho(vertice)
+            #print(f'| custo: {vertice.custo} | tempo: {time.time() - tempo} s')
             found = True
         else:
             x.append(vertice)
@@ -304,10 +304,19 @@ def h1(v):  # hamming
     return distance
 
 
+# Main
 
+acao = sys.argv[1]
 
-teste = '2_3541687'
-busca_largura(teste)
-busca_profundidade(teste)
-busca_astar_h1(teste)
-busca_astar_h1(teste)
+if acao == 's':
+    avalia_sucessor(sys.argv[2])
+elif acao == 'e': 
+    avalia_expande(sys.argv[2], int(sys.argv[3]))
+elif acao == 'bsf':
+    busca_largura(sys.argv[2])
+elif acao == 'dsf':
+    busca_profundidade(sys.argv[2])
+elif acao == 'h1':
+    busca_astar_h1(sys.argv[2])
+elif acao == 'h2':
+    busca_astar_h2(sys.argv[2])
