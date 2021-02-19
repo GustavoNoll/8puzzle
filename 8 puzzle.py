@@ -1,9 +1,10 @@
 from math import floor
-from collections import deque 
+from collections import deque
 import time
 import sys
 
-class Estado:
+
+class Vertice:
 
     def __init__(self, estado, pai, acao, custo, f=0):
         self.estado = estado
@@ -11,7 +12,6 @@ class Estado:
         self.acao = acao
         self.custo = custo
         self.f = f
-        
 
 
 class FilaPrioridade:
@@ -19,30 +19,35 @@ class FilaPrioridade:
     def __init__(self):
         self.fila = []
 
-    def insere(self, estado: Estado):
+    # Insere um elemento e faz o shiftup
+    def insere(self, estado: Vertice):
         self.fila.append(estado)
         self.shiftup(len(self.fila)-1)
-
+    
+    # Troca dois elementos de lugar
     def troca(self, i1, i2):
         temp = self.fila[i1]
         self.fila[i1] = self.fila[i2]
         self.fila[i2] = temp
 
+    # Retorna o f() do vertice
     def f(self, i):
         return self.fila[i].f
 
+    # Testa fila vazia
     def vazia(self):
         if not self.fila:
             return True
         else:
             return False
 
+    # Remove elemento
     def pop(self):
         # Fila vazia
         if not self.fila:
             return []
 
-        # Fila unitária, retorna o único estado
+        # Fila unitária, retorna o único elemento
         if len(self.fila) == 1:
             return self.fila.pop()
 
@@ -52,9 +57,9 @@ class FilaPrioridade:
 
         # ordenamos o heap e retornamos o elemento retirado
         self.minheapify(0)
-
         return primeiro
 
+    # Reordena o heap
     def minheapify(self, i):
         # índices dos filhos esquerdo e direito
         fe = 2*i+1
@@ -74,6 +79,7 @@ class FilaPrioridade:
             self.troca(i, menor)
             self.minheapify(menor)
 
+    # Move um elemento até ficar no lugar correto do Heap
     def shiftup(self, i):
         while i != 0:
             pai = floor((i-1)/2)
@@ -128,20 +134,20 @@ def string_to_list(estado):
     return est
 
 
-def expande(no):
+def expande(vertice):
     neighbors = []
     moves = []
-    moves = sucessor(no.estado)
+    moves = sucessor(vertice.estado)
     for m in moves:
-        neighbors.append(Estado(m[1], no, m[0], no.custo + 1))
+        neighbors.append(Vertice(m[1], vertice, m[0], vertice.custo + 1))
     return neighbors
 
 
 def avalia_expande(estado, custo):
-    teste = Estado(estado, None, None, custo)
+    teste = Vertice(estado, None, None, custo)
     listaExpandidos = expande(teste)
-    for no in listaExpandidos:
-        print(f'({no.acao},{no.estado},{no.custo},{no.pai.estado})', end=' ')
+    for vertice in listaExpandidos:
+        print(f'({vertice.acao},{vertice.estado},{vertice.custo},{vertice.pai.estado})', end=' ')
     print()
 
 
@@ -152,71 +158,67 @@ def avalia_sucessor(estado):
     print()
 
 
-def print_caminho(v: Estado):
+def print_caminho(vertice):
     caminho = deque()
-    while v.custo != 0:
-        caminho.append(v.acao)
-        v = v.pai
+    while vertice.custo != 0:
+        caminho.append(vertice.acao)
+        vertice = vertice.pai
     while caminho:
         print(caminho.pop(), end=' ')
 
-
+# efetua a busca em largura
 def busca_largura(s):
     tempo = time.time()
     x = deque([])
+    F = deque([Vertice(s, None, None, 0)])
     visitados = set()
-    F = deque([Estado(s, None, None, 0)])
     found = False
-    iter = 1
 
     while not found:
         if not F:
             return False
 
-        v = F.popleft()        
-
-        if v.estado == '12345678_':
-            print_caminho(v)
-            print("| custo: ", v.custo)
+        # popleft retira o primeiro elemento do deque, efetivamente agindo como fila
+        vertice = F.popleft()
+        
+        if vertice.estado == '12345678_':
+            #print_caminho(vertice)
+            print(f'| custo: {vertice.custo} | tempo: {time.time() - tempo} s')
             found = True
-            print("--- %s seconds ---" % (time.time() - tempo))
         else:
-            x.append(v)
-            visitados.add(v.estado)
-            for vizinho in expande(v):
-                if vizinho.estado not in visitados:
+            x.append(vertice)
+            visitados.add(vertice.estado) # salva os estados visitados em um set
+            for vizinho in expande(vertice):
+                if vizinho.estado not in visitados: # só adiciona estados não visitados
                     F.append(vizinho)
                     visitados.add(vizinho.estado)
-                    iter += 1
 
 
 def busca_profundidade(s):
     tempo = time.time()
-    x = []
-    F = [Estado(s, None, None, 0)]
+    x = deque([])
+    F = deque([Vertice(s, None, None, 0)])
     visitados = set()
     found = False
-    iter = 1
 
     while not found:
         if not F:
             return False
 
-        v = F.pop()
-
-        if v.estado == '12345678_':
-            print_caminho(v)
-            print("| custo: ", v.custo)
+        # pop retira o último elemento do deque, efetivamente agindo como pilha
+        vertice = F.pop()
+        
+        if vertice.estado == '12345678_':
+            #print_caminho(vertice)
+            print(f'| custo: {vertice.custo} | tempo: {time.time() - tempo} s')
             found = True
-            print("--- %s seconds ---" % (time.time() - tempo))
         else:
-            x.append(v)
-            visitados.add(v.estado)
-            for vizinho in expande(v):
-                if vizinho.estado not in visitados:
+            x.append(vertice)
+            visitados.add(vertice.estado) #salva os estados visitados em um set
+            for vizinho in expande(vertice):
+                if vizinho.estado not in visitados: # só adiciona estados não visitados
                     F.append(vizinho)
                     visitados.add(vizinho.estado)
-                    iter += 1
 
 
 def busca_astar_h1(s):
@@ -224,32 +226,59 @@ def busca_astar_h1(s):
     x = []
     F = FilaPrioridade()
     visitados = set()
-
-    F.insere(Estado(s, None, None, 0, h1(s)))
-
     found = False
-    iter = 1
+    
+    F.insere(Vertice(s, None, None, 0, h1(s)))
 
     while not found:
         if F.vazia():
             return False
 
-        v = F.pop()
+        # Aqui, pop é um métoto que retira o elemento com o menor f() do heap
+        vertice = F.pop()
 
-        if v.estado == '12345678_':
-            print_caminho(v)
-            print("| custo: ", v.custo)
+        if vertice.estado == '12345678_':
+            #print_caminho(vertice)
+            print(f'| custo: {vertice.custo} | tempo: {time.time() - tempo} s')
             found = True
-            print("--- %s seconds ---" % (time.time() - tempo))
         else:
-            x.append(v)
-            visitados.add(v.estado)
-            for vizinho in expande(v):
-                if vizinho.estado not in visitados:
+            x.append(vertice)
+            visitados.add(vertice.estado) #salva os estados visitados em um set
+            for vizinho in expande(vertice):
+                if vizinho.estado not in visitados: # só adiciona estados não visitados
                     vizinho.f = h1(vizinho.estado) + vizinho.custo
                     visitados.add(vizinho.estado)
                     F.insere(vizinho)
-                    iter += 1
+
+
+def busca_astar_h2(s):
+    tempo = time.time()
+    x = []
+    F = FilaPrioridade()
+    visitados = set()
+    found = False
+    
+    F.insere(Vertice(s, None, None, 0, h2(s)))
+
+    while not found:
+        if F.vazia():
+            return False
+
+        # Aqui, pop é um métoto que retira o elemento com o menor f() do heap
+        vertice = F.pop()
+
+        if vertice.estado == '12345678_':
+            #print_caminho(vertice)
+            print(f'| custo: {vertice.custo} | tempo: {time.time() - tempo} s')
+            found = True
+        else:
+            x.append(vertice)
+            visitados.add(vertice.estado) #salva os estados visitados em um set
+            for vizinho in expande(vertice):
+                if vizinho.estado not in visitados: # só adiciona estados não visitados
+                    vizinho.f = h2(vizinho.estado) + vizinho.custo
+                    visitados.add(vizinho.estado)
+                    F.insere(vizinho)
 
 
 def h2(v):  # manhatan
@@ -262,7 +291,6 @@ def h2(v):  # manhatan
                 a = int(goal.index(estado_lista[i][j])/3)
                 b = int(goal.index(estado_lista[i][j]) % 3)
                 distance += abs(i-a) + abs(j-b)
-    #print("{}".format(distance))
     return distance
 
 
@@ -273,44 +301,13 @@ def h1(v):  # hamming
     for i in range(9):
         if goal[i] != estado_lista[i] and estado_lista[i] != '_':
             distance += 1
-    #print("{}".format(distance))
     return distance
 
 
-def estado_visistado(estado, expandidos):
-    #return(all(e.estado == estado.estado for e in expandidos))
-    for expandido in expandidos:
-        if expandido.estado == estado.estado:
-            return True
-    return False
 
 
-def imprime_estado(estado):
-    print('-------------------')
-    print("e: " + estado.estado)
-    if estado.acao == None:
-        print("None")
-    else:
-        print(estado.acao)
-    print("c: " + str(estado.custo))
-    if estado.pai:
-        print("p: " + estado.pai.estado)
-    else:
-        print("p: None")
-    print('-------------------')
-
-# estado='123456_78'
-# print(estado)
-# avalia_sucessor(estado)
-# avalia_expande(estado,0)
-
-sys.setrecursionlimit(1000)
-
-##busca_largura('123_56478')
-#busca_astar_h1('23_541687')
-busca_profundidade('23_541687')
-# h2('5_4732816')
-# h1('5_4732816')
-
-#123_56478
-#2_3541687
+teste = '2_3541687'
+busca_largura(teste)
+busca_profundidade(teste)
+busca_astar_h1(teste)
+busca_astar_h1(teste)
