@@ -312,9 +312,9 @@ if acao == 's':
     avalia_sucessor(sys.argv[2])
 elif acao == 'e': 
     avalia_expande(sys.argv[2], int(sys.argv[3]))
-elif acao == 'bsf':
+elif acao == 'bfs':
     busca_largura(sys.argv[2])
-elif acao == 'dsf':
+elif acao == 'dfs':
     busca_profundidade(sys.argv[2])
 elif acao == 'h1':
     busca_astar_h1(sys.argv[2])
