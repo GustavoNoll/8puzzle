@@ -1,0 +1,14 @@
+8-Puzzle Solver
+
+208005 - Alexandre Junior da Costa
+322864 - Gustavo Lopes Noll
+
+Nenhuma biblioteca adicional fora as padrões do Python3 são necessárias.
+
+Para o nó 2_3541687, usando BFS e A* com ambas as heurísticas, o custo foi 23.
+Já o DFS encontrou um caminho com custo 57941.
+
+BFS expandiu 113967 nós.
+DFS, 119906.
+H1, 11211.
+H2, 1696.
