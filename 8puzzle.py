@@ -183,7 +183,7 @@ def busca_largura(s):
         
         if vertice.estado == '12345678_':
             print_caminho(vertice)
-            #print(f'| custo: {vertice.custo} | tempo: {time.time() - tempo} s')
+            #print(f'| custo: {vertice.custo} | tempo: {time.time() - tempo} s | {len(x)} expandidos')
             found = True
         else:
             x.append(vertice)
@@ -210,7 +210,7 @@ def busca_profundidade(s):
         
         if vertice.estado == '12345678_':
             print_caminho(vertice)
-            #print(f'| custo: {vertice.custo} | tempo: {time.time() - tempo} s')
+            #print(f'| custo: {vertice.custo} | tempo: {time.time() - tempo} s | {len(x)} expandidos')
             found = True
         else:
             x.append(vertice)
@@ -239,7 +239,7 @@ def busca_astar_h1(s):
 
         if vertice.estado == '12345678_':
             print_caminho(vertice)
-            #print(f'| custo: {vertice.custo} | tempo: {time.time() - tempo} s')
+            #print(f'| custo: {vertice.custo} | tempo: {time.time() - tempo} s | {len(x)} expandidos')
             found = True
         else:
             x.append(vertice)
@@ -269,7 +269,7 @@ def busca_astar_h2(s):
 
         if vertice.estado == '12345678_':
             print_caminho(vertice)
-            #print(f'| custo: {vertice.custo} | tempo: {time.time() - tempo} s')
+            #print(f'| custo: {vertice.custo} | tempo: {time.time() - tempo} s | {len(x)} expandidos')
             found = True
         else:
             x.append(vertice)
